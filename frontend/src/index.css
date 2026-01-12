@@ -1,0 +1,129 @@
+@import "tailwindcss";
+
+@theme {
+  /* Premium Color Palette - Default (Dark) */
+  --color-primary: #D32F2F;
+  --color-primary-dark: #B71C1C;
+  --color-dark: #0a0a0a;
+  --color-dark-lighter: #1a1a1a;
+  --color-light: #f5f5f5;
+  --color-accent: #FFD700;
+  --color-glass: rgba(255, 255, 255, 0.03);
+
+  --font-sans: 'Inter', system-ui, sans-serif;
+  --font-display: 'Outfit', sans-serif;
+
+  --animate-float: float 6s ease-in-out infinite;
+  --animate-liquid: liquid 8s ease-in-out infinite;
+}
+
+/* Light Theme Overrides */
+:root[data-theme="light"] {
+  --color-dark: #f0f2f5;
+  /* Softer off-white background */
+  --color-dark-lighter: #ffffff;
+  /* White for cards/panels */
+  --color-light: #1a1a1a;
+  /* Softer dark text */
+  --color-glass: rgba(255, 255, 255, 0.7);
+  /* More opaque glass for light mode */
+  --color-accent: #D32F2F;
+}
+
+@layer utilities {
+  .glass-panel {
+    background: var(--color-glass);
+    backdrop-filter: blur(16px);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
+  }
+
+  /* Adjust border for light mode */
+  :root[data-theme="light"] .glass-panel {
+    border: 1px solid rgba(0, 0, 0, 0.08);
+  }
+
+  .glass-panel-hover {
+    transition: all 0.3s ease;
+  }
+
+  .glass-panel-hover:hover {
+    background: rgba(255, 255, 255, 0.08);
+    border-color: rgba(255, 255, 255, 0.2);
+    box-shadow: 0 0 20px rgba(211, 47, 47, 0.2);
+  }
+
+  :root[data-theme="light"] .glass-panel-hover:hover {
+    background: rgba(0, 0, 0, 0.05);
+    border-color: rgba(0, 0, 0, 0.1);
+  }
+
+  .text-gradient-gold {
+    background: linear-gradient(to right, #BF953F, #FCF6BA, #B38728, #FBF5B7, #AA771C);
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+    background-size: 200% auto;
+    animation: shine 4s linear infinite;
+  }
+
+  .text-gradient-primary {
+    background: linear-gradient(135deg, var(--color-primary), #ff5252, var(--color-primary));
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+    background-size: 200% auto;
+    animation: shine 4s linear infinite;
+  }
+
+  .bg-liquid {
+    background: linear-gradient(45deg, #0a0a0a, #1a1a1a, #2c0b0b, #0a0a0a);
+    background-size: 400% 400%;
+    animation: liquid 15s ease infinite;
+  }
+}
+
+body {
+  @apply bg-dark text-light font-sans antialiased selection:bg-primary selection:text-white transition-colors duration-500;
+  overflow-x: hidden;
+}
+
+/* Override body background for light mode to remove radial gradient or adjust it */
+:root[data-theme="light"] body {
+  background-image: none;
+  background-color: var(--color-dark);
+}
+
+@keyframes float {
+  0% {
+    transform: translateY(0px);
+  }
+
+  50% {
+    transform: translateY(-20px);
+  }
+
+  100% {
+    transform: translateY(0px);
+  }
+}
+
+@keyframes liquid {
+  0% {
+    background-position: 0% 50%;
+  }
+
+  50% {
+    background-position: 100% 50%;
+  }
+
+  100% {
+    background-position: 0% 50%;
+  }
+}
+
+@keyframes shine {
+  to {
+    background-position: 200% center;
+  }
+}

@@ -1,0 +1,381 @@
+# Техническая документация проекта AutoShow
+
+## Архитектура проекта
+
+AutoShow построен по архитектуре **клиент-сервер** с разделением на:
+- **Backend (Django)** - серверная часть на порту 8000
+- **Frontend (React + Vite)** - клиентская часть на порту 5173
+
+---
+
+## 1. База данных и хранение данных
+
+### 1.1 Где хранится база данных?
+📁 **Файл**: [/Users/haller/IT/AutoShow/db.sqlite3](file:///Users/haller/IT/AutoShow/db.sqlite3)
+
+Это SQLite база данных, которая хранит ВСЕ данные проекта в одном файле.
+
+### 1.2 Таблицы базы данных
+
+#### **Таблица `auth_user`** (Пользователи)
+Хранит данные о пользователях:
+- [id](file:///Users/haller/IT/AutoShow/frontend/src/context/AuthContext.jsx#7-66) - уникальный идентификатор
+- `username` - имя пользователя (для входа)
+- `password` - зашифрованный пароль
+- `email` - электронная почта
+- `is_superuser` - флаг администратора (True/False)
+- `is_staff` - доступ к админ-панели Django
+
+#### **Таблица `cars_car`** (Автомобили)
+Хранит информацию о машинах:
+- [id](file:///Users/haller/IT/AutoShow/frontend/src/context/AuthContext.jsx#7-66) - ID машины
+- `brand` - марка (BMW, Mercedes и т.д.)
+- `model` - модель (M5 G90)
+- `year` - год выпуска
+- `price` - цена
+- `mileage` - пробег в км
+- `transmission` - коробка передач (automatic, manual, robot, cvt)
+- `body_type` - тип кузова (sedan, suv, coupe и т.д.)
+- `color` - цвет
+- `engine_volume` - объем двигателя
+- `horsepower` - мощность
+- `description` - описание
+- `status` - статус (available, sold, test_drive)
+- `is_commission` - комиссионная продажа (True/False)
+- `is_featured` - избранное (True/False) ⭐
+- `created_at` - дата добавления
+
+#### **Таблица `cars_carimage`** (Фотографии машин)
+Связь: одна машина → много фото
+- [id](file:///Users/haller/IT/AutoShow/frontend/src/context/AuthContext.jsx#7-66) - ID фото
+- `car_id` - ID машины (связь с `cars_car`)
+- `image` - путь к файлу фото
+- `is_main` - главное фото (True/False)
+
+#### **Таблица `cars_testdriverequest`** (Заявки на тест-драйв)
+- [id](file:///Users/haller/IT/AutoShow/frontend/src/context/AuthContext.jsx#7-66) - ID заявки
+- `user_id` - ID пользователя
+- `car_id` - ID машины
+- `client_name` - имя клиента
+- `phone` - телефон
+- `requested_date` - желаемая дата и время
+- `status` - статус (new, confirmed, completed, cancelled)
+- `created_at` - дата создания
+
+#### **Таблица `cars_commissionrequest`** (Комиссионные заявки)
+- [id](file:///Users/haller/IT/AutoShow/frontend/src/context/AuthContext.jsx#7-66) - ID заявки
+- `user_id` - ID пользователя (опционально)
+- `client_name` - имя клиента
+- `phone` - телефон
+- `brand`, `model`, `year` - данные машины клиента
+- `mileage` - пробег
+- `expected_price` - ожидаемая цена
+- `description` - описание
+- `status` - статус (pending, approved, rejected)
+- `created_at` - дата создания
+
+#### **Таблица `marketing_news`** (Новости)
+- [id](file:///Users/haller/IT/AutoShow/frontend/src/context/AuthContext.jsx#7-66) - ID новости
+- `title` - заголовок
+- `content` - текст новости
+- `image` - фото новости
+- `created_at` - дата публикации
+
+#### **Таблица `marketing_promotion`** (Акции)
+- [id](file:///Users/haller/IT/AutoShow/frontend/src/context/AuthContext.jsx#7-66) - ID акции
+- `title` - заголовок
+- `description` - описание
+- `image` - фото акции
+- `start_date` - дата начала
+- `end_date` - дата окончания
+- `is_active` - активна ли (True/False)
+
+---
+
+## 2. Хранение файлов (фотографии)
+
+### 2.1 Где хранятся фото?
+📁 **Папка**: `/Users/haller/IT/AutoShow/media/`
+
+Структура:
+```
+media/
+├── cars/           # Фото автомобилей
+├── news/           # Фото новостей
+└── promotions/     # Фото акций
+```
+
+### 2.2 Как работает загрузка фото?
+
+1. **Админ загружает фото** через форму (AdminCarForm, AdminNewsForm)
+2. **Frontend отправляет** файл на backend через `FormData` (multipart/form-data)
+3. **Backend (Django)** сохраняет файл в папку `media/`
+4. **В базе данных** сохраняется только путь: `cars/g90.jpg`
+5. **При отображении** frontend добавляет полный URL: `http://localhost:8000/media/cars/g90.jpg`
+
+### 2.3 Настройки медиа-файлов
+📄 **Файл**: [backend/settings.py](file:///Users/haller/IT/AutoShow/backend/settings.py)
+```python
+MEDIA_URL = '/media/'
+MEDIA_ROOT = BASE_DIR / 'media'
+```
+
+📄 **Файл**: [backend/urls.py](file:///Users/haller/IT/AutoShow/backend/urls.py)
+```python
+urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
+```
+
+---
+
+## 3. Аутентификация и регистрация
+
+### 3.1 Как работает регистрация?
+
+**Frontend** → [Register.jsx](file:///Users/haller/IT/AutoShow/frontend/src/pages/Register.jsx)
+1. Пользователь заполняет форму (username, email, password)
+2. Отправка POST запроса на `/api/users/register/`
+
+**Backend** → [users/views.py](file:///Users/haller/IT/AutoShow/users/views.py)
+3. `RegisterView` получает данные
+4. `UserSerializer` валидирует данные
+5. Создается новый пользователь через `User.objects.create_user()`
+6. Пароль **автоматически хешируется** Django
+
+**Где хранится пароль?**
+- В таблице `auth_user` в поле `password`
+- Формат: `pbkdf2_sha256$...` (зашифрован, нельзя расшифровать)
+
+### 3.2 Как работает вход (Login)?
+
+**Frontend** → [Login.jsx](file:///Users/haller/IT/AutoShow/frontend/src/pages/Login.jsx)
+1. Пользователь вводит username и password
+2. POST запрос на `/api/users/token/`
+
+**Backend** → JWT токены (Simple JWT)
+3. Django проверяет username и password
+4. Если верно, создает 2 токена:
+   - `access_token` - для доступа к API (срок жизни: 5 минут)
+   - `refresh_token` - для обновления access токена (срок жизни: 1 день)
+
+**Где хранятся токены?**
+📁 **Frontend**: `localStorage` браузера
+- `localStorage.getItem('access_token')`
+- `localStorage.getItem('refresh_token')`
+
+**Как используются токены?**
+📄 **Файл**: [frontend/src/services/api.js](file:///Users/haller/IT/AutoShow/frontend/src/services/api.js)
+```javascript
+api.interceptors.request.use((config) => {
+    const token = localStorage.getItem('access_token');
+    if (token) {
+        config.headers.Authorization = `Bearer ${token}`;
+    }
+    return config;
+});
+```
+
+Каждый запрос к API автоматически добавляет заголовок:
+```
+Authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGc...
+```
+
+### 3.3 Как проверяется, что пользователь - админ?
+
+**Backend**:
+```python
+if request.user.is_staff:  # Админ
+    # Показать все заявки
+else:  # Обычный пользователь
+    # Показать только свои заявки
+```
+
+**Frontend** → [AuthContext.jsx](file:///Users/haller/IT/AutoShow/frontend/src/context/AuthContext.jsx)
+```javascript
+const { user } = useContext(AuthContext);
+if (user && user.is_superuser) {
+    // Показать админ-панель
+}
+```
+
+---
+
+## 4. API Endpoints (Маршруты)
+
+### 4.1 Пользователи
+- `POST /api/users/register/` - Регистрация
+- `POST /api/users/token/` - Получить токены (вход)
+- `POST /api/users/token/refresh/` - Обновить access токен
+- `GET /api/users/dashboard/` - Данные личного кабинета
+
+### 4.2 Автомобили
+- `GET /api/cars/` - Список машин (с фильтрами)
+- `GET /api/cars/{id}/` - Детали машины
+- `POST /api/cars/` - Добавить машину (только админ)
+- `PATCH /api/cars/{id}/` - Редактировать машину (только админ)
+- `DELETE /api/cars/{id}/` - Удалить машину (только админ)
+
+**Фильтры**:
+- `?brand=BMW` - по марке
+- `?transmission=automatic` - по коробке
+- `?is_featured=true` - только избранные ⭐
+
+### 4.3 Заявки
+- `POST /api/test-drives/` - Создать заявку на тест-драйв
+- `GET /api/test-drives/` - Список заявок (админ видит все, пользователь - свои)
+- `PATCH /api/test-drives/{id}/` - Изменить заявку
+- `POST /api/commission-requests/` - Создать комиссионную заявку
+- `GET /api/commission-requests/` - Список комиссионных заявок
+
+### 4.4 Маркетинг
+- `GET /api/marketing/news/` - Новости
+- `POST /api/marketing/news/` - Добавить новость (только админ)
+- `GET /api/marketing/promotions/` - Акции
+- `POST /api/marketing/promotions/` - Добавить акцию (только админ)
+
+---
+
+## 5. Структура проекта
+
+### 5.1 Backend (Django)
+```
+AutoShow/
+├── backend/              # Настройки проекта
+│   ├── settings.py      # Конфигурация (база данных, CORS, медиа)
+│   └── urls.py          # Главные маршруты
+├── cars/                # Приложение "Автомобили"
+│   ├── models.py        # Модели: Car, CarImage, TestDriveRequest, CommissionRequest
+│   ├── serializers.py   # Преобразование данных в JSON
+│   ├── views.py         # Логика API (CarViewSet, TestDriveRequestViewSet)
+│   └── urls.py          # Маршруты /api/cars/, /api/test-drives/
+├── users/               # Приложение "Пользователи"
+│   ├── views.py         # RegisterView, DashboardView
+│   ├── serializers.py   # UserSerializer
+│   └── urls.py          # Маршруты /api/users/
+├── marketing/           # Приложение "Маркетинг"
+│   ├── models.py        # News, Promotion, Review
+│   ├── views.py         # NewsViewSet, PromotionViewSet
+│   └── urls.py          # Маршруты /api/marketing/
+├── media/               # Загруженные файлы (фото)
+└── db.sqlite3           # База данных
+```
+
+### 5.2 Frontend (React)
+```
+frontend/
+├── src/
+│   ├── pages/           # Страницы
+│   │   ├── Home.jsx            # Главная (избранные машины)
+│   │   ├── Catalog.jsx         # Каталог (все машины + фильтры)
+│   │   ├── CarDetails.jsx      # Детали машины + тест-драйв
+│   │   ├── Login.jsx           # Вход
+│   │   ├── Register.jsx        # Регистрация
+│   │   ├── Dashboard.jsx       # Личный кабинет клиента
+│   │   ├── AdminDashboard.jsx  # Админ-панель
+│   │   └── News.jsx            # Новости и акции
+│   ├── components/      # Компоненты
+│   │   ├── Navbar.jsx          # Навигация
+│   │   ├── Footer.jsx          # Подвал
+│   │   ├── CarCard.jsx         # Карточка машины
+│   │   ├── AdminCarForm.jsx    # Форма добавления/редактирования машины
+│   │   └── AdminNewsForm.jsx   # Форма новостей/акций
+│   ├── context/         # Глобальное состояние
+│   │   └── AuthContext.jsx     # Контекст авторизации (user, login, logout)
+│   └── services/        # API клиент
+│       └── api.js              # Axios настройки + функции запросов
+```
+
+---
+
+## 6. Как работает каждая страница
+
+### 6.1 Главная страница (Home)
+1. Загружает машины с `is_featured=true`
+2. Показывает первые 3 избранные машины
+3. Загружает последние 3 новости
+
+### 6.2 Каталог (Catalog)
+1. Загружает все доступные машины
+2. Фильтры работают через URL параметры: `?brand=BMW&transmission=automatic`
+3. При клике на машину → переход на CarDetails
+
+### 6.3 Детали машины (CarDetails)
+1. Загружает данные машины по ID
+2. Показывает галерею фото
+3. Форма "Записаться на тест-драйв":
+   - Если пользователь авторизован → автоматически подставляет данные
+   - Создает заявку через `POST /api/test-drives/`
+
+### 6.4 Личный кабинет (Dashboard)
+1. Загружает данные через `/api/users/dashboard/`
+2. Показывает:
+   - Заявки на тест-драйв (кроме cancelled/completed)
+   - Комиссионные заявки
+3. Кнопки "Изменить время" и "Отменить" для активных заявок
+
+### 6.5 Админ-панель (AdminDashboard)
+**Вкладки**:
+- **Автомобили**: добавить/редактировать/удалить + чекбокс "Избранное"
+- **Новости**: добавить/редактировать/удалить
+- **Акции**: добавить/редактировать/удалить + даты начала/окончания
+- **Заявки**: просмотр всех заявок + кнопки "Принять"/"Отклонить"
+
+---
+
+## 7. Безопасность
+
+### 7.1 Пароли
+- Хешируются через `pbkdf2_sha256` (нельзя расшифровать)
+- Хранятся в базе данных в зашифрованном виде
+
+### 7.2 Токены
+- Access токен живет 5 минут
+- Refresh токен живет 1 день
+- Хранятся в `localStorage` браузера
+
+### 7.3 Права доступа
+- **AllowAny**: доступно всем (регистрация, просмотр машин)
+- **IsAuthenticated**: только авторизованным (создание заявок)
+- **IsAdminUser**: только админам (добавление машин, управление заявками)
+
+### 7.4 CORS
+```python
+CORS_ALLOW_ALL_ORIGINS = True  # Разрешает запросы с localhost:5173
+```
+
+---
+
+## 8. Как запустить проект
+
+### Backend:
+```bash
+cd /Users/haller/IT/AutoShow
+python manage.py runserver
+```
+Доступен на: `http://localhost:8000`
+
+### Frontend:
+```bash
+cd /Users/haller/IT/AutoShow/frontend
+npm run dev
+```
+Доступен на: `http://localhost:5173`
+
+---
+
+## 9. Важные файлы конфигурации
+
+- [backend/settings.py](file:///Users/haller/IT/AutoShow/backend/settings.py) - настройки Django
+- [frontend/src/services/api.js](file:///Users/haller/IT/AutoShow/frontend/src/services/api.js) - API клиент
+- [frontend/src/context/AuthContext.jsx](file:///Users/haller/IT/AutoShow/frontend/src/context/AuthContext.jsx) - управление авторизацией
+
+---
+
+## 10. Миграции базы данных
+
+Когда вы изменяете модели (добавляете поля), нужно:
+```bash
+python manage.py makemigrations  # Создать миграцию
+python manage.py migrate         # Применить к базе данных
+```
+
+Миграции хранятся в папках `*/migrations/`
