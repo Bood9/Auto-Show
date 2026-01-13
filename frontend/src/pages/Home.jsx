@@ -35,96 +35,146 @@ const Home = () => {
             <section className="relative h-screen flex items-center justify-center overflow-hidden">
                 {/* Background Image with Overlay */}
                 <div className="absolute inset-0 z-0">
-                    <div className="absolute inset-0 bg-gradient-to-b from-dark/30 via-transparent to-dark z-10" />
-                    <div className="absolute inset-0 bg-gradient-to-r from-dark/80 via-transparent to-dark/80 z-10" />
+                    <div className="absolute inset-0 bg-gradient-to-b from-dark/70 via-dark/40 to-dark z-10" />
+                    <div className="absolute inset-0 bg-gradient-to-r from-dark via-transparent to-dark z-10" />
+                    {/* Animated gold glow effects */}
+                    <div className="absolute top-1/4 left-1/4 w-96 h-96 bg-primary/20 rounded-full blur-[120px] animate-pulse-slow z-5"></div>
+                    <div className="absolute bottom-1/4 right-1/4 w-96 h-96 bg-accent/10 rounded-full blur-[120px] animate-pulse-slow z-5" style={{ animationDelay: '2s' }}></div>
                     <img
                         src={heroImage}
                         alt="Premium Car"
-                        className="w-full h-full object-cover scale-105 animate-float"
+                        className="w-full h-full object-cover scale-110"
                     />
                 </div>
 
-                <div className="relative z-20 text-center px-4 max-w-5xl mx-auto mt-16">
+                <div className="relative z-20 text-center px-4 max-w-6xl mx-auto mt-16">
                     <motion.div
-                        initial={{ opacity: 0, y: 30 }}
+                        initial={{ opacity: 0, y: 50 }}
                         animate={{ opacity: 1, y: 0 }}
-                        transition={{ duration: 0.8 }}
-                        className="mb-6"
+                        transition={{ duration: 1, ease: "easeOut" }}
+                        className="mb-8"
                     >
-                        <span className="text-accent tracking-[0.3em] text-sm font-bold uppercase mb-4 block drop-shadow-md">
-                            Добро пожаловать в будущее
+                        <span className="inline-block px-6 py-2 mb-6 glass-panel rounded-full text-primary font-bold tracking-[0.25em] text-xs uppercase border border-primary/20">
+                            Dubai Luxury Collection
                         </span>
-                        <h1 className="text-6xl md:text-8xl font-bold mb-6 leading-tight drop-shadow-xl">
-                            УПРАВЛЯЙ <br />
-                            <span className="text-transparent bg-clip-text bg-gradient-to-r from-primary to-red-600 drop-shadow-sm">МЕЧТОЙ</span>
+                        <h1 className="text-5xl md:text-7xl lg:text-8xl font-bold mb-6 leading-[1.1] font-display">
+                            <span className="block text-light mb-2">РОСКОШЬ</span>
+                            <span className="block text-gradient-gold text-6xl md:text-8xl lg:text-9xl">
+                                БЕЗ КОМПРОМИССОВ
+                            </span>
                         </h1>
                     </motion.div>
 
                     <motion.p
                         initial={{ opacity: 0, y: 30 }}
                         animate={{ opacity: 1, y: 0 }}
-                        transition={{ duration: 0.8, delay: 0.2 }}
-                        className="text-xl md:text-2xl text-gray-200 mb-10 max-w-2xl mx-auto font-light drop-shadow-md"
+                        transition={{ duration: 1, delay: 0.3, ease: "easeOut" }}
+                        className="text-lg md:text-xl text-muted mb-12 max-w-3xl mx-auto font-light leading-relaxed"
                     >
-                        Испытайте коллекцию премиальных автомобилей, созданных для вашего исключительного стиля жизни.
+                        Откройте для себя эксклюзивную коллекцию премиальных автомобилей.
+                        <br className="hidden md:block" />
+                        Каждый выбор – это воплощение совершенства и престижа.
                     </motion.p>
 
                     <motion.div
                         initial={{ opacity: 0, y: 30 }}
                         animate={{ opacity: 1, y: 0 }}
-                        transition={{ duration: 0.8, delay: 0.4 }}
-                        className="flex flex-col md:flex-row items-center justify-center gap-6"
+                        transition={{ duration: 1, delay: 0.6, ease: "easeOut" }}
+                        className="flex flex-col md:flex-row items-center justify-center gap-4 md:gap-6"
                     >
                         <Link
                             to="/catalog"
-                            className="group relative px-8 py-4 bg-primary text-white rounded-full font-bold text-lg overflow-hidden shadow-[0_0_20px_rgba(211,47,47,0.5)] hover:shadow-[0_0_30px_rgba(211,47,47,0.8)] transition-all duration-300"
+                            className="group relative px-8 md:px-10 py-3.5 md:py-4 bg-gradient-to-r from-primary to-primary/80 text-dark rounded-lg font-bold text-base md:text-lg overflow-hidden shadow-lg shadow-primary/30 hover:shadow-xl hover:shadow-primary/40 transition-all duration-500 border border-primary/20"
                         >
-                            <span className="relative z-10 flex items-center">
-                                Перейти в каталог <ArrowRight className="ml-2 h-5 w-5 group-hover:translate-x-1 transition-transform" />
+                            <span className="relative z-10 flex items-center font-semibold">
+                                Смотреть коллекцию
+                                <ArrowRight className="ml-2 h-5 w-5 group-hover:translate-x-1 transition-transform duration-300" />
                             </span>
-                            <div className="absolute inset-0 bg-gradient-to-r from-red-600 to-primary transform scale-x-0 group-hover:scale-x-100 transition-transform origin-left duration-300" />
+                            <div className="absolute inset-0 bg-gradient-to-r from-primary/80 to-primary transform scale-x-0 group-hover:scale-x-100 transition-transform origin-right duration-500" />
                         </Link>
 
                         <Link
                             to="/sell"
-                            className="px-8 py-4 glass-panel text-white rounded-full font-bold text-lg hover:bg-white/10 transition-all duration-300 backdrop-blur-md border border-white/20"
+                            className="group px-8 md:px-10 py-3.5 md:py-4 glass-panel rounded-lg font-bold text-base md:text-lg transition-all duration-500 border border-primary/20 hover:border-primary/40 hover:bg-primary/5"
                         >
-                            Продать авто
+                            <span className="flex items-center text-light group-hover:text-primary transition-colors">
+                                Продать авто
+                            </span>
                         </Link>
+                    </motion.div>
+
+                    {/* Stats */}
+                    <motion.div
+                        initial={{ opacity: 0, y: 30 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        transition={{ duration: 1, delay: 0.9 }}
+                        className="mt-20 grid grid-cols-3 gap-6 md:gap-12 max-w-3xl mx-auto"
+                    >
+                        {[
+                            { value: "500+", label: "Премиум авто" },
+                            { value: "98%", label: "Довольных клиентов" },
+                            { value: "15+", label: "Лет опыта" }
+                        ].map((stat, index) => (
+                            <div key={index} className="text-center">
+                                <div className="text-2xl md:text-4xl font-bold text-gradient-gold mb-2">{stat.value}</div>
+                                <div className="text-xs md:text-sm text-muted uppercase tracking-wider">{stat.label}</div>
+                            </div>
+                        ))}
                     </motion.div>
                 </div>
 
                 {/* Scroll Indicator */}
                 <motion.div
-                    animate={{ y: [0, 10, 0] }}
-                    transition={{ duration: 2, repeat: Infinity }}
-                    className="absolute bottom-10 left-1/2 transform -translate-x-1/2 text-gray-400"
+                    animate={{ y: [0, 12, 0] }}
+                    transition={{ duration: 2, repeat: Infinity, ease: "easeInOut" }}
+                    className="absolute bottom-8 md:bottom-12 left-1/2 transform -translate-x-1/2 text-primary/60"
                 >
-                    <div className="w-6 h-10 border-2 border-gray-400 rounded-full flex justify-center p-2 backdrop-blur-sm">
-                        <div className="w-1 h-2 bg-gray-400 rounded-full" />
+                    <div className="w-6 h-10 border-2 border-primary/40 rounded-full flex justify-center p-2 backdrop-blur-sm">
+                        <div className="w-1 h-2 bg-primary rounded-full" />
                     </div>
                 </motion.div>
             </section>
 
             {/* Features Section */}
-            <section className="py-20 bg-dark-lighter relative overflow-hidden">
-                <div className="absolute top-0 left-0 w-full h-px bg-gradient-to-r from-transparent via-white/10 to-transparent" />
-                <div className="max-w-7xl mx-auto px-4">
-                    <div className="grid grid-cols-1 md:grid-cols-3 gap-12">
+            <section className="py-24 md:py-32 relative overflow-hidden">
+                <div className="absolute inset-0 bg-gradient-to-b from-dark via-dark-lighter to-dark"></div>
+                <div className="absolute top-0 left-0 w-full h-px bg-gradient-to-r from-transparent via-primary/30 to-transparent" />
+
+                <div className="max-w-7xl mx-auto px-4 relative z-10">
+                    <div className="text-center mb-16">
+                        <span className="inline-block px-6 py-2 mb-4 glass-panel rounded-full text-primary font-bold tracking-[0.2em] text-xs uppercase border border-primary/20">
+                            Наши преимущества
+                        </span>
+                        <h2 className="text-3xl md:text-4xl font-bold text-light">Почему выбирают нас</h2>
+                    </div>
+
+                    <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
                         {features.map((feature, index) => (
                             <motion.div
                                 key={index}
-                                initial={{ opacity: 0, y: 20 }}
+                                initial={{ opacity: 0, y: 30 }}
                                 whileInView={{ opacity: 1, y: 0 }}
                                 viewport={{ once: true }}
-                                transition={{ delay: index * 0.2 }}
-                                className="text-center group"
+                                transition={{ delay: index * 0.2, duration: 0.6 }}
+                                className="relative group"
                             >
-                                <div className="w-16 h-16 mx-auto mb-6 bg-white/5 rounded-2xl flex items-center justify-center group-hover:bg-primary/20 transition-colors duration-300">
-                                    <feature.icon className="h-8 w-8 text-primary" />
+                                <div className="glass-panel glass-panel-hover rounded-2xl p-8 h-full border border-primary/10 hover:border-primary/30 transition-all duration-500">
+                                    {/* Icon container with glow */}
+                                    <div className="relative w-16 h-16 mb-6">
+                                        <div className="absolute inset-0 bg-primary/20 rounded-2xl blur-xl group-hover:bg-primary/30 transition-all duration-500"></div>
+                                        <div className="relative w-full h-full bg-gradient-to-br from-primary/20 to-primary/5 rounded-2xl flex items-center justify-center border border-primary/20 group-hover:border-primary/40 transition-all duration-500">
+                                            <feature.icon className="h-7 w-7 text-primary" />
+                                        </div>
+                                    </div>
+
+                                    <h3 className="text-xl font-bold mb-3 text-light group-hover:text-primary transition-colors duration-300">
+                                        {feature.title}
+                                    </h3>
+                                    <p className="text-muted leading-relaxed">{feature.desc}</p>
+
+                                    {/* Decorative corner accent */}
+                                    <div className="absolute top-0 right-0 w-20 h-20 bg-gradient-to-br from-primary/5 to-transparent rounded-bl-full opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
                                 </div>
-                                <h3 className="text-xl font-bold mb-3">{feature.title}</h3>
-                                <p className="text-gray-400">{feature.desc}</p>
                             </motion.div>
                         ))}
                     </div>
@@ -132,59 +182,89 @@ const Home = () => {
             </section>
 
             {/* Featured Cars */}
-            <section className="py-24 px-4 max-w-7xl mx-auto">
-                <div className="flex justify-between items-end mb-16">
-                    <div>
-                        <span className="text-primary font-bold tracking-wider uppercase text-sm mb-2 block">Эксклюзив</span>
-                        <h2 className="text-4xl font-bold">Избранные автомобили</h2>
-                    </div>
-                    <Link to="/catalog" className="hidden md:flex items-center text-gray-400 hover:text-primary transition-colors group">
-                        Смотреть все <ArrowRight className="ml-2 h-5 w-5 group-hover:translate-x-1 transition-transform" />
-                    </Link>
-                </div>
+            <section className="py-24 md:py-32 px-4 max-w-7xl mx-auto relative">
+                {/* Background decoration */}
+                <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[800px] bg-primary/5 rounded-full blur-[150px] pointer-events-none"></div>
 
-                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 gap-8">
-                    {featuredCars.map((car, index) => (
-                        <motion.div
-                            key={car.id}
-                            initial={{ opacity: 0, y: 20 }}
-                            whileInView={{ opacity: 1, y: 0 }}
-                            viewport={{ once: true }}
-                            transition={{ delay: index * 0.1 }}
+                <div className="relative z-10">
+                    <div className="flex flex-col md:flex-row justify-between items-start md:items-end mb-12 md:mb-16 gap-6">
+                        <div>
+                            <span className="inline-block px-6 py-2 mb-4 glass-panel rounded-full text-primary font-bold tracking-[0.2em] text-xs uppercase border border-primary/20">
+                                Премиум коллекция
+                            </span>
+                            <h2 className="text-3xl md:text-5xl font-bold text-light font-display">
+                                Избранные автомобили
+                            </h2>
+                            <p className="text-muted mt-3 max-w-xl">
+                                Тщательно отобранные автомобили класса люкс для самых взыскательных клиентов
+                            </p>
+                        </div>
+                        <Link
+                            to="/catalog"
+                            className="group hidden md:flex items-center px-6 py-3 glass-panel rounded-lg text-light hover:text-primary border border-primary/20 hover:border-primary/40 transition-all duration-300"
                         >
-                            <CarCard car={car} />
-                        </motion.div>
-                    ))}
-                </div>
+                            <span className="font-semibold">Весь каталог</span>
+                            <ArrowRight className="ml-2 h-5 w-5 group-hover:translate-x-1 transition-transform" />
+                        </Link>
+                    </div>
 
-                <div className="mt-12 text-center md:hidden">
-                    <Link to="/catalog" className="inline-flex items-center text-primary font-bold">
-                        Смотреть все <ArrowRight className="ml-2 h-5 w-5" />
-                    </Link>
+                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 gap-6 md:gap-8">
+                        {featuredCars.map((car, index) => (
+                            <motion.div
+                                key={car.id}
+                                initial={{ opacity: 0, y: 30 }}
+                                whileInView={{ opacity: 1, y: 0 }}
+                                viewport={{ once: true }}
+                                transition={{ delay: index * 0.15, duration: 0.6 }}
+                            >
+                                <CarCard car={car} />
+                            </motion.div>
+                        ))}
+                    </div>
+
+                    <div className="mt-12 text-center md:hidden">
+                        <Link
+                            to="/catalog"
+                            className="inline-flex items-center px-8 py-3 glass-panel rounded-lg text-primary font-bold border border-primary/20"
+                        >
+                            Весь каталог
+                            <ArrowRight className="ml-2 h-5 w-5" />
+                        </Link>
+                    </div>
                 </div>
             </section>
 
             {/* Latest News */}
-            <section className="py-24 bg-dark-lighter relative">
-                <div className="absolute top-0 left-0 w-full h-px bg-gradient-to-r from-transparent via-white/10 to-transparent" />
-                <div className="max-w-7xl mx-auto px-4">
-                    <div className="text-center mb-16">
-                        <span className="text-primary font-bold tracking-wider uppercase text-sm mb-2 block">Блог</span>
-                        <h2 className="text-4xl font-bold">Последние новости</h2>
+            <section className="py-24 md:py-32 relative overflow-hidden">
+                <div className="absolute inset-0 bg-gradient-to-b from-dark via-dark-card to-dark"></div>
+                <div className="absolute top-0 left-0 w-full h-px bg-gradient-to-r from-transparent via-primary/30 to-transparent" />
+
+                <div className="max-w-7xl mx-auto px-4 relative z-10">
+                    <div className="text-center mb-12 md:mb-16">
+                        <span className="inline-block px-6 py-2 mb-4 glass-panel rounded-full text-primary font-bold tracking-[0.2em] text-xs uppercase border border-primary/20">
+                            Новости и события
+                        </span>
+                        <h2 className="text-3xl md:text-5xl font-bold text-light font-display mb-4">
+                            Последние новости
+                        </h2>
+                        <p className="text-muted max-w-2xl mx-auto">
+                            Будьте в курсе новых поступлений, специальных предложений и событий
+                        </p>
                     </div>
 
-                    <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+                    <div className="grid grid-cols-1 md:grid-cols-3 gap-6 md:gap-8">
                         {latestNews.map((news, index) => (
                             <motion.div
                                 key={news.id}
-                                initial={{ opacity: 0, y: 20 }}
+                                initial={{ opacity: 0, y: 30 }}
                                 whileInView={{ opacity: 1, y: 0 }}
                                 viewport={{ once: true }}
-                                transition={{ delay: index * 0.1 }}
-                                className="glass-panel rounded-xl overflow-hidden group hover:border-primary/50 transition-colors duration-300"
+                                transition={{ delay: index * 0.15, duration: 0.6 }}
+                                className="glass-panel glass-panel-hover rounded-2xl overflow-hidden group border border-primary/10 hover:border-primary/30 transition-all duration-500"
                             >
                                 {news.image && (
-                                    <div className="h-48 overflow-hidden">
+                                    <div className="h-52 overflow-hidden relative">
+                                        <div className="absolute inset-0 bg-gradient-to-t from-dark-card/80 to-transparent z-10 opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
                                         <img
                                             src={news.image}
                                             alt={news.title}
@@ -192,12 +272,24 @@ const Home = () => {
                                         />
                                     </div>
                                 )}
-                                <div className="p-8">
-                                    <div className="text-xs text-primary font-bold mb-3 uppercase tracking-wider">Новости</div>
-                                    <h3 className="text-xl font-bold mb-3 group-hover:text-primary transition-colors">{news.title}</h3>
-                                    <p className="text-gray-400 text-sm mb-6 line-clamp-3 leading-relaxed">{news.content}</p>
-                                    <Link to="/news" className="inline-flex items-center text-white hover:text-primary transition-colors text-sm font-bold group/link">
-                                        Читать далее <ArrowRight className="ml-2 h-4 w-4 transform group-hover/link:translate-x-1 transition-transform" />
+                                <div className="p-6 md:p-8">
+                                    <div className="flex items-center gap-2 mb-4">
+                                        <span className="px-3 py-1 bg-primary/10 border border-primary/20 rounded-full text-xs text-primary font-bold uppercase tracking-wider">
+                                            Новости
+                                        </span>
+                                    </div>
+                                    <h3 className="text-xl font-bold mb-3 text-light group-hover:text-primary transition-colors duration-300 line-clamp-2">
+                                        {news.title}
+                                    </h3>
+                                    <p className="text-muted text-sm mb-6 line-clamp-3 leading-relaxed">
+                                        {news.content}
+                                    </p>
+                                    <Link
+                                        to="/news"
+                                        className="inline-flex items-center text-light hover:text-primary transition-colors text-sm font-semibold group/link"
+                                    >
+                                        Читать далее
+                                        <ArrowRight className="ml-2 h-4 w-4 transform group-hover/link:translate-x-1 transition-transform" />
                                     </Link>
                                 </div>
                             </motion.div>
