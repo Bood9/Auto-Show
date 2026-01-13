@@ -62,8 +62,8 @@ const Navbar = () => {
                         </span>
                     </Link>
 
-                    {/* Desktop Navigation - Center */}
-                    <div className="hidden lg:flex items-center space-x-1 absolute left-1/2 transform -translate-x-1/2">
+                    {/* Desktop Navigation - Flex grow to push menu right */}
+                    <div className="hidden lg:flex items-center space-x-1 flex-grow justify-center mx-8">
                         {navLinks.map((link) => (
                             <Link
                                 key={link.name}
@@ -98,7 +98,7 @@ const Navbar = () => {
                     </div>
 
                     {/* Desktop User Menu - Right */}
-                    <div className="hidden lg:block flex-shrink-0">
+                    <div className="hidden lg:flex items-center space-x-3 flex-shrink-0">
                         {user ? (
                             <div className="flex items-center space-x-3">
                                 {user.is_superuser && (
