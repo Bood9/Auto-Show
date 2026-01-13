@@ -1,11 +1,12 @@
 import React, { useEffect, useState } from 'react';
-import { useParams } from 'react-router-dom';
+import { useParams, useNavigate } from 'react-router-dom';
 import { getCar, createTestDriveRequest } from '../services/api';
-import { motion } from 'framer-motion';
-import { Calendar, Gauge, Zap, Check, Phone, User, Clock } from 'lucide-react';
+import { motion, AnimatePresence } from 'framer-motion';
+import { Calendar, Gauge, Zap, Check, Phone, User, Clock, X, ArrowLeft, Fuel, Palette, Package } from 'lucide-react';
 
 const CarDetails = () => {
     const { id } = useParams();
+    const navigate = useNavigate();
     const [car, setCar] = useState(null);
     const [activeImage, setActiveImage] = useState(0);
     const [showModal, setShowModal] = useState(false);
@@ -31,199 +32,281 @@ const CarDetails = () => {
                 setShowModal(false);
                 setSubmitStatus(null);
                 setFormData({ client_name: '', phone: '', requested_date: '' });
-            }, 2000);
+            }, 2500);
         } catch (error) {
             console.error(error);
             setSubmitStatus('error');
         }
     };
 
-    if (!car) return <div className="min-h-screen bg-dark text-white flex items-center justify-center">Загрузка...</div>;
+    if (!car) {
+        return (
+            <div className="min-h-screen bg-dark text-light flex items-center justify-center">
+                <div className="text-center">
+                    <div className="w-16 h-16 border-4 border-primary/20 border-t-primary rounded-full animate-spin mx-auto mb-4"></div>
+                    <p className="text-muted">Загрузка...</p>
+                </div>
+            </div>
+        );
+    }
+
+    const specs = [
+        { icon: Calendar, label: 'Год выпуска', value: car.year },
+        { icon: Gauge, label: 'Пробег', value: `${car.mileage} км` },
+        { icon: Zap, label: 'Коробка', value: car.transmission === 'automatic' ? 'Автомат' : car.transmission === 'manual' ? 'Механика' : car.transmission },
+        { icon: Fuel, label: 'Двигатель', value: `${car.engine_volume || 'N/A'} л` },
+        { icon: Palette, label: 'Цвет', value: car.color || 'N/A' },
+        { icon: Package, label: 'Кузов', value: car.body_type || 'Sedan' },
+    ];
 
     return (
-        <div className="min-h-screen bg-dark text-white pt-32 pb-12 px-4 relative overflow-hidden">
-            {/* Background Elements */}
-            <div className="absolute top-0 left-0 w-full h-full overflow-hidden pointer-events-none z-0">
-                <div className="absolute top-[-10%] right-[-5%] w-[500px] h-[500px] bg-primary/20 rounded-full blur-[120px] animate-pulse-slow" />
-                <div className="absolute bottom-[-10%] left-[-5%] w-[500px] h-[500px] bg-blue-600/10 rounded-full blur-[120px] animate-pulse-slow delay-1000" />
+        <div className="min-h-screen bg-dark text-light pt-24 pb-16 px-4 relative overflow-hidden">
+            {/* Background decorations */}
+            <div className="absolute inset-0 overflow-hidden pointer-events-none">
+                <div className="absolute top-0 right-0 w-[600px] h-[600px] bg-primary/10 rounded-full blur-[150px] animate-pulse-slow" />
+                <div className="absolute bottom-0 left-0 w-[600px] h-[600px] bg-accent/5 rounded-full blur-[150px] animate-pulse-slow" style={{ animationDelay: '2s' }} />
             </div>
 
-            <div className="max-w-7xl mx-auto grid grid-cols-1 lg:grid-cols-2 gap-12 relative z-10">
-                {/* Gallery */}
-                <div className="space-y-4">
-                    <motion.div
-                        initial={{ opacity: 0, y: 20 }}
-                        animate={{ opacity: 1, y: 0 }}
-                        transition={{ duration: 0.5 }}
-                        className="aspect-video rounded-2xl overflow-hidden border border-white/10 shadow-2xl relative group"
-                    >
-                        <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500 z-10" />
-                        <img
-                            src={getImageUrl(car.images[activeImage]?.image)}
-                            alt={car.model}
-                            className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
-                        />
-                    </motion.div>
-                    <motion.div
-                        initial={{ opacity: 0, y: 20 }}
-                        animate={{ opacity: 1, y: 0 }}
-                        transition={{ duration: 0.5, delay: 0.2 }}
-                        className="grid grid-cols-4 gap-4"
-                    >
-                        {car.images.map((img, idx) => (
-                            <button
-                                key={img.id}
-                                onClick={() => setActiveImage(idx)}
-                                className={`aspect-video rounded-xl overflow-hidden border-2 transition-all duration-300 ${activeImage === idx ? 'border-primary shadow-[0_0_15px_rgba(211,47,47,0.5)] scale-105' : 'border-white/10 hover:border-white/30 opacity-70 hover:opacity-100'}`}
-                            >
-                                <img src={getImageUrl(img.image)} alt="" className="w-full h-full object-cover" />
-                            </button>
-                        ))}
-                    </motion.div>
-                </div>
-
-                {/* Info */}
-                <motion.div
-                    initial={{ opacity: 0, x: 20 }}
+            <div className="max-w-7xl mx-auto relative z-10">
+                {/* Back button */}
+                <motion.button
+                    initial={{ opacity: 0, x: -20 }}
                     animate={{ opacity: 1, x: 0 }}
-                    transition={{ duration: 0.5, delay: 0.3 }}
+                    onClick={() => navigate(-1)}
+                    className="flex items-center gap-2 px-4 py-2 mb-8 glass-panel rounded-lg border border-primary/20 hover:border-primary/40 text-muted hover:text-primary transition-all duration-300 group"
                 >
-                    <div className="glass-panel p-8 rounded-2xl mb-8 border border-white/10">
-                        <h1 className="text-5xl font-bold mb-2 bg-clip-text text-transparent bg-gradient-to-r from-white to-gray-400">{car.brand} {car.model}</h1>
-                        <p className="text-4xl text-gradient-gold font-bold mb-8 drop-shadow-[0_0_10px_rgba(255,215,0,0.3)]">${Number(car.price).toLocaleString()}</p>
+                    <ArrowLeft className="h-4 w-4 group-hover:-translate-x-1 transition-transform" />
+                    <span>Назад</span>
+                </motion.button>
 
-                        <div className="grid grid-cols-2 gap-4 mb-8">
-                            <div className="bg-white/5 p-4 rounded-xl flex items-center space-x-4 border border-white/5 hover:border-primary/30 transition-colors group">
-                                <div className="p-3 bg-primary/10 rounded-lg group-hover:bg-primary/20 transition-colors">
-                                    <Calendar className="text-primary h-6 w-6" />
-                                </div>
-                                <div>
-                                    <p className="text-xs text-gray-400 uppercase tracking-wider">Год выпуска</p>
-                                    <p className="font-bold text-lg">{car.year}</p>
-                                </div>
+                <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-12">
+                    {/* Gallery Section */}
+                    <div className="space-y-4">
+                        <motion.div
+                            initial={{ opacity: 0, y: 30 }}
+                            animate={{ opacity: 1, y: 0 }}
+                            transition={{ duration: 0.6 }}
+                            className="relative aspect-[4/3] rounded-2xl overflow-hidden glass-panel border border-primary/10 group"
+                        >
+                            {/* Status Badge */}
+                            <div className="absolute top-4 right-4 z-20">
+                                <span className={`px-4 py-2 rounded-lg text-xs font-bold tracking-wider backdrop-blur-xl ${
+                                    car.status === 'available'
+                                        ? 'bg-primary/20 text-primary border border-primary/40'
+                                        : car.status === 'sold'
+                                        ? 'bg-accent/20 text-accent border border-accent/40'
+                                        : 'bg-muted/20 text-muted border border-muted/40'
+                                }`}>
+                                    {car.status === 'available' ? 'ДОСТУПЕН' : car.status === 'sold' ? 'ПРОДАН' : 'ЗАБРОНИРОВАН'}
+                                </span>
                             </div>
-                            <div className="bg-white/5 p-4 rounded-xl flex items-center space-x-4 border border-white/5 hover:border-primary/30 transition-colors group">
-                                <div className="p-3 bg-primary/10 rounded-lg group-hover:bg-primary/20 transition-colors">
-                                    <Gauge className="text-primary h-6 w-6" />
-                                </div>
-                                <div>
-                                    <p className="text-xs text-gray-400 uppercase tracking-wider">Пробег</p>
-                                    <p className="font-bold text-lg">{car.mileage} км</p>
-                                </div>
+
+                            {/* Main Image */}
+                            <img
+                                src={getImageUrl(car.images[activeImage]?.image)}
+                                alt={`${car.brand} ${car.model}`}
+                                className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
+                            />
+
+                            {/* Gradient overlay on hover */}
+                            <div className="absolute inset-0 bg-gradient-to-t from-dark/80 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
+                        </motion.div>
+
+                        {/* Thumbnails */}
+                        <motion.div
+                            initial={{ opacity: 0, y: 20 }}
+                            animate={{ opacity: 1, y: 0 }}
+                            transition={{ duration: 0.6, delay: 0.2 }}
+                            className="grid grid-cols-4 gap-3"
+                        >
+                            {car.images.map((img, idx) => (
+                                <button
+                                    key={img.id}
+                                    onClick={() => setActiveImage(idx)}
+                                    className={`relative aspect-video rounded-xl overflow-hidden border-2 transition-all duration-300 ${
+                                        activeImage === idx
+                                            ? 'border-primary shadow-lg shadow-primary/30 scale-105'
+                                            : 'border-primary/20 hover:border-primary/40 opacity-60 hover:opacity-100'
+                                    }`}
+                                >
+                                    <img src={getImageUrl(img.image)} alt="" className="w-full h-full object-cover" />
+                                    {activeImage === idx && (
+                                        <div className="absolute inset-0 bg-primary/10" />
+                                    )}
+                                </button>
+                            ))}
+                        </motion.div>
+                    </div>
+
+                    {/* Info Section */}
+                    <motion.div
+                        initial={{ opacity: 0, y: 30 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        transition={{ duration: 0.6, delay: 0.3 }}
+                        className="space-y-6"
+                    >
+                        {/* Title & Price */}
+                        <div className="glass-panel p-6 lg:p-8 rounded-2xl border border-primary/10">
+                            <span className="inline-block px-4 py-1.5 mb-4 glass-panel rounded-full text-primary font-bold tracking-[0.2em] text-xs uppercase border border-primary/20">
+                                Premium Selection
+                            </span>
+                            <h1 className="text-4xl lg:text-5xl font-bold mb-3 text-light font-display">
+                                {car.brand} {car.model}
+                            </h1>
+                            <div className="flex items-baseline gap-3 mb-6">
+                                <p className="text-5xl text-gradient-gold font-bold">
+                                    ${Number(car.price).toLocaleString()}
+                                </p>
+                                <span className="text-sm text-muted uppercase tracking-wider">USD</span>
                             </div>
-                            <div className="bg-white/5 p-4 rounded-xl flex items-center space-x-4 border border-white/5 hover:border-primary/30 transition-colors group">
-                                <div className="p-3 bg-primary/10 rounded-lg group-hover:bg-primary/20 transition-colors">
-                                    <Zap className="text-primary h-6 w-6" />
-                                </div>
-                                <div>
-                                    <p className="text-xs text-gray-400 uppercase tracking-wider">Коробка</p>
-                                    <p className="font-bold text-lg capitalize">{car.transmission}</p>
-                                </div>
+
+                            {/* Specs Grid */}
+                            <div className="grid grid-cols-2 gap-3 mb-6">
+                                {specs.map((spec, index) => (
+                                    <div
+                                        key={index}
+                                        className="bg-white/5 p-4 rounded-xl flex items-center gap-3 border border-primary/10 hover:border-primary/30 transition-all duration-300 group/spec"
+                                    >
+                                        <div className="p-2.5 bg-primary/10 rounded-lg border border-primary/20 group-hover/spec:bg-primary/20 transition-colors">
+                                            <spec.icon className="text-primary h-5 w-5" />
+                                        </div>
+                                        <div>
+                                            <p className="text-[10px] text-muted uppercase tracking-wider mb-0.5">{spec.label}</p>
+                                            <p className="font-semibold text-light text-sm">{spec.value}</p>
+                                        </div>
+                                    </div>
+                                ))}
                             </div>
-                            <div className="bg-white/5 p-4 rounded-xl flex items-center space-x-4 border border-white/5 hover:border-primary/30 transition-colors group">
-                                <div className="p-3 bg-primary/10 rounded-lg group-hover:bg-primary/20 transition-colors">
-                                    <Check className="text-primary h-6 w-6" />
-                                </div>
-                                <div>
-                                    <p className="text-xs text-gray-400 uppercase tracking-wider">Статус</p>
-                                    <p className="font-bold text-lg capitalize text-green-400">{car.status}</p>
-                                </div>
+
+                            {/* Description */}
+                            <div className="border-t border-primary/10 pt-6">
+                                <h3 className="text-lg font-bold mb-3 flex items-center text-light">
+                                    <span className="w-1 h-5 bg-gradient-to-b from-primary to-primary/50 rounded-full mr-3"></span>
+                                    Описание
+                                </h3>
+                                <p className="text-muted leading-relaxed">{car.description}</p>
                             </div>
                         </div>
 
-                        <div className="mb-8">
-                            <h3 className="text-xl font-bold mb-4 flex items-center">
-                                <span className="w-1 h-6 bg-primary rounded-full mr-3"></span>
-                                Описание
-                            </h3>
-                            <p className="text-gray-300 leading-relaxed text-lg font-light">{car.description}</p>
-                        </div>
-
+                        {/* CTA Button */}
                         <button
                             onClick={() => setShowModal(true)}
-                            className="w-full bg-gradient-to-r from-primary to-red-700 text-white font-bold py-5 rounded-xl hover:shadow-[0_0_30px_rgba(211,47,47,0.6)] transition-all duration-300 text-lg uppercase tracking-wider transform hover:-translate-y-1"
+                            disabled={car.status !== 'available'}
+                            className={`w-full py-4 rounded-xl font-bold text-lg uppercase tracking-wider transition-all duration-500 ${
+                                car.status === 'available'
+                                    ? 'bg-gradient-to-r from-primary to-primary/80 text-dark hover:shadow-xl hover:shadow-primary/40 hover:scale-[1.02]'
+                                    : 'bg-muted/20 text-muted cursor-not-allowed'
+                            }`}
                         >
-                            Записаться на тест-драйв
+                            {car.status === 'available' ? 'Записаться на тест-драйв' : 'Недоступно'}
                         </button>
-                    </div>
-                </motion.div>
+                    </motion.div>
+                </div>
             </div>
 
             {/* Test Drive Modal */}
-            {showModal && (
-                <div className="fixed inset-0 bg-black/80 flex items-center justify-center z-50 p-4">
-                    <motion.div
-                        initial={{ scale: 0.9, opacity: 0 }}
-                        animate={{ scale: 1, opacity: 1 }}
-                        className="bg-gray-900 p-8 rounded-lg max-w-md w-full border border-gray-800"
-                    >
-                        <h2 className="text-2xl font-bold mb-6">Записаться на тест-драйв</h2>
-                        {submitStatus === 'success' ? (
-                            <div className="text-green-500 text-center py-8">
-                                <Check className="h-16 w-16 mx-auto mb-4" />
-                                <p>Заявка успешно отправлена!</p>
-                            </div>
-                        ) : (
-                            <form onSubmit={handleSubmit} className="space-y-4">
-                                <div>
-                                    <label className="block text-sm font-medium mb-1">Имя</label>
-                                    <div className="relative">
-                                        <User className="absolute left-3 top-3 h-5 w-5 text-gray-500" />
-                                        <input
-                                            type="text"
-                                            required
-                                            className="w-full bg-dark border border-gray-700 rounded pl-10 pr-4 py-2 focus:border-primary focus:outline-none"
-                                            value={formData.client_name}
-                                            onChange={e => setFormData({ ...formData, client_name: e.target.value })}
-                                        />
+            <AnimatePresence>
+                {showModal && (
+                    <div className="fixed inset-0 bg-dark/95 backdrop-blur-xl flex items-center justify-center z-50 p-4">
+                        <motion.div
+                            initial={{ scale: 0.9, opacity: 0 }}
+                            animate={{ scale: 1, opacity: 1 }}
+                            exit={{ scale: 0.9, opacity: 0 }}
+                            transition={{ duration: 0.3 }}
+                            className="glass-panel p-8 rounded-2xl max-w-lg w-full border border-primary/20 relative"
+                        >
+                            {/* Close button */}
+                            <button
+                                onClick={() => setShowModal(false)}
+                                className="absolute top-4 right-4 p-2 rounded-lg hover:bg-white/5 text-muted hover:text-light transition-colors"
+                            >
+                                <X className="h-5 w-5" />
+                            </button>
+
+                            <h2 className="text-3xl font-bold mb-2 text-light font-display">Тест-драйв</h2>
+                            <p className="text-muted mb-6">Заполните форму и мы свяжемся с вами</p>
+
+                            {submitStatus === 'success' ? (
+                                <motion.div
+                                    initial={{ scale: 0.8, opacity: 0 }}
+                                    animate={{ scale: 1, opacity: 1 }}
+                                    className="text-center py-12"
+                                >
+                                    <div className="w-20 h-20 bg-primary/10 rounded-full flex items-center justify-center mx-auto mb-4 border-4 border-primary/20">
+                                        <Check className="h-10 w-10 text-primary" />
                                     </div>
-                                </div>
-                                <div>
-                                    <label className="block text-sm font-medium mb-1">Телефон</label>
-                                    <div className="relative">
-                                        <Phone className="absolute left-3 top-3 h-5 w-5 text-gray-500" />
-                                        <input
-                                            type="tel"
-                                            required
-                                            className="w-full bg-dark border border-gray-700 rounded pl-10 pr-4 py-2 focus:border-primary focus:outline-none"
-                                            value={formData.phone}
-                                            onChange={e => setFormData({ ...formData, phone: e.target.value })}
-                                        />
+                                    <h3 className="text-xl font-bold text-light mb-2">Заявка отправлена!</h3>
+                                    <p className="text-muted">Мы свяжемся с вами в ближайшее время</p>
+                                </motion.div>
+                            ) : (
+                                <form onSubmit={handleSubmit} className="space-y-5">
+                                    <div>
+                                        <label className="block text-sm font-semibold mb-2 text-light">Ваше имя</label>
+                                        <div className="relative">
+                                            <User className="absolute left-3 top-1/2 -translate-y-1/2 h-5 w-5 text-muted" />
+                                            <input
+                                                type="text"
+                                                required
+                                                placeholder="Иван Иванов"
+                                                className="w-full bg-dark-card border border-primary/20 rounded-lg pl-11 pr-4 py-3 text-light placeholder:text-muted focus:border-primary/50 focus:outline-none transition-colors"
+                                                value={formData.client_name}
+                                                onChange={e => setFormData({ ...formData, client_name: e.target.value })}
+                                            />
+                                        </div>
                                     </div>
-                                </div>
-                                <div>
-                                    <label className="block text-sm font-medium mb-1">Желаемая дата</label>
-                                    <div className="relative">
-                                        <Clock className="absolute left-3 top-3 h-5 w-5 text-gray-500" />
-                                        <input
-                                            type="datetime-local"
-                                            required
-                                            className="w-full bg-dark border border-gray-700 rounded pl-10 pr-4 py-2 focus:border-primary focus:outline-none"
-                                            value={formData.requested_date}
-                                            onChange={e => setFormData({ ...formData, requested_date: e.target.value })}
-                                        />
+                                    <div>
+                                        <label className="block text-sm font-semibold mb-2 text-light">Телефон</label>
+                                        <div className="relative">
+                                            <Phone className="absolute left-3 top-1/2 -translate-y-1/2 h-5 w-5 text-muted" />
+                                            <input
+                                                type="tel"
+                                                required
+                                                placeholder="+7 (999) 123-45-67"
+                                                className="w-full bg-dark-card border border-primary/20 rounded-lg pl-11 pr-4 py-3 text-light placeholder:text-muted focus:border-primary/50 focus:outline-none transition-colors"
+                                                value={formData.phone}
+                                                onChange={e => setFormData({ ...formData, phone: e.target.value })}
+                                            />
+                                        </div>
                                     </div>
-                                </div>
-                                <div className="flex space-x-4 mt-6">
-                                    <button
-                                        type="button"
-                                        onClick={() => setShowModal(false)}
-                                        className="flex-1 bg-gray-700 text-white py-2 rounded hover:bg-gray-600"
-                                    >
-                                        Отмена
-                                    </button>
-                                    <button
-                                        type="submit"
-                                        className="flex-1 bg-primary text-white py-2 rounded hover:bg-red-700"
-                                    >
-                                        Отправить
-                                    </button>
-                                </div>
-                            </form>
-                        )}
-                    </motion.div>
-                </div>
-            )}
+                                    <div>
+                                        <label className="block text-sm font-semibold mb-2 text-light">Желаемая дата и время</label>
+                                        <div className="relative">
+                                            <Clock className="absolute left-3 top-1/2 -translate-y-1/2 h-5 w-5 text-muted" />
+                                            <input
+                                                type="datetime-local"
+                                                required
+                                                className="w-full bg-dark-card border border-primary/20 rounded-lg pl-11 pr-4 py-3 text-light focus:border-primary/50 focus:outline-none transition-colors"
+                                                value={formData.requested_date}
+                                                onChange={e => setFormData({ ...formData, requested_date: e.target.value })}
+                                            />
+                                        </div>
+                                    </div>
+
+                                    {submitStatus === 'error' && (
+                                        <p className="text-accent text-sm">Ошибка отправки. Попробуйте снова.</p>
+                                    )}
+
+                                    <div className="flex gap-3 pt-4">
+                                        <button
+                                            type="button"
+                                            onClick={() => setShowModal(false)}
+                                            className="flex-1 px-6 py-3 glass-panel rounded-lg font-semibold border border-muted/20 text-muted hover:text-light hover:bg-white/5 transition-all duration-300"
+                                        >
+                                            Отмена
+                                        </button>
+                                        <button
+                                            type="submit"
+                                            className="flex-1 px-6 py-3 bg-gradient-to-r from-primary to-primary/80 text-dark rounded-lg font-semibold hover:shadow-lg hover:shadow-primary/30 transition-all duration-300"
+                                        >
+                                            Отправить
+                                        </button>
+                                    </div>
+                                </form>
+                            )}
+                        </motion.div>
+                    </div>
+                )}
+            </AnimatePresence>
         </div>
     );
 };
