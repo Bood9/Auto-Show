@@ -4,7 +4,6 @@ import { ArrowRight, Star, TrendingUp, Shield } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import { getCars, getNews } from '../services/api';
 import CarCard from '../components/CarCard';
-import heroImage from '../assets/hero-car.jpg';
 
 const Home = () => {
     const [featuredCars, setFeaturedCars] = useState([]);
@@ -33,18 +32,34 @@ const Home = () => {
         <div className="min-h-screen bg-dark text-white overflow-x-hidden">
             {/* Hero Section */}
             <section className="relative h-screen flex items-center justify-center overflow-hidden">
-                {/* Background Image with Overlay */}
+                {/* Premium Background with Gradient */}
                 <div className="absolute inset-0 z-0">
-                    <div className="absolute inset-0 bg-gradient-to-b from-dark/70 via-dark/40 to-dark z-10" />
-                    <div className="absolute inset-0 bg-gradient-to-r from-dark via-transparent to-dark z-10" />
-                    {/* Animated gold glow effects */}
-                    <div className="absolute top-1/4 left-1/4 w-96 h-96 bg-primary/20 rounded-full blur-[120px] animate-pulse-slow z-5"></div>
-                    <div className="absolute bottom-1/4 right-1/4 w-96 h-96 bg-accent/10 rounded-full blur-[120px] animate-pulse-slow z-5" style={{ animationDelay: '2s' }}></div>
-                    <img
-                        src={heroImage}
-                        alt="Premium Car"
-                        className="w-full h-full object-cover scale-110"
-                    />
+                    {/* Base gradient background - luxury showroom feel */}
+                    <div className="absolute inset-0 bg-gradient-to-br from-dark via-[#0a0a12] to-dark"></div>
+
+                    {/* Grid pattern overlay for showroom effect */}
+                    <div className="absolute inset-0 opacity-[0.03]" style={{
+                        backgroundImage: `linear-gradient(rgba(201,169,97,0.1) 1px, transparent 1px),
+                                         linear-gradient(90deg, rgba(201,169,97,0.1) 1px, transparent 1px)`,
+                        backgroundSize: '100px 100px'
+                    }}></div>
+
+                    {/* Radial gradient spotlights */}
+                    <div className="absolute top-0 left-0 w-full h-full">
+                        <div className="absolute top-1/4 left-1/3 w-[600px] h-[600px] bg-primary/15 rounded-full blur-[150px] animate-pulse-slow"></div>
+                        <div className="absolute bottom-1/3 right-1/4 w-[500px] h-[500px] bg-primary/10 rounded-full blur-[140px] animate-pulse-slow" style={{ animationDelay: '2s' }}></div>
+                        <div className="absolute top-1/2 left-1/2 w-[400px] h-[400px] bg-accent/5 rounded-full blur-[120px] animate-pulse-slow" style={{ animationDelay: '1s' }}></div>
+                    </div>
+
+                    {/* Gradient overlays for depth */}
+                    <div className="absolute inset-0 bg-gradient-to-b from-dark/90 via-dark/50 to-dark z-10"></div>
+                    <div className="absolute inset-0 bg-gradient-to-r from-dark/80 via-transparent to-dark/80 z-10"></div>
+
+                    {/* Shimmer effect lines */}
+                    <div className="absolute inset-0 z-5 overflow-hidden">
+                        <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-transparent via-primary/30 to-transparent animate-shimmer"></div>
+                        <div className="absolute bottom-0 left-0 w-full h-1 bg-gradient-to-r from-transparent via-primary/20 to-transparent animate-shimmer" style={{ animationDelay: '3s' }}></div>
+                    </div>
                 </div>
 
                 <div className="relative z-20 text-center px-4 max-w-6xl mx-auto mt-16">

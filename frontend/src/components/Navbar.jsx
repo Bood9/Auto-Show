@@ -50,55 +50,55 @@ const Navbar = () => {
         <nav className={`fixed w-full z-50 transition-all duration-500 ${scrolled ? 'glass-panel py-3 shadow-lg shadow-primary/10' : 'bg-transparent py-6'}`}>
             <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
                 <div className="flex items-center justify-between h-16">
-                    <Link to="/" className="flex items-center space-x-3 group">
+                    {/* Logo */}
+                    <Link to="/" className="flex items-center space-x-3 group flex-shrink-0">
                         <div className="relative">
                             <Car className="h-9 w-9 text-primary group-hover:scale-110 transition-all duration-300 drop-shadow-[0_0_12px_rgba(201,169,97,0.6)]" />
                             <div className="absolute inset-0 bg-primary/20 blur-xl rounded-full group-hover:bg-primary/30 transition-all duration-300"></div>
                         </div>
-                        <span className="text-2xl font-bold tracking-wider font-display">
+                        <span className="text-2xl font-bold tracking-wider font-display whitespace-nowrap">
                             <span className="text-light">DUBAI </span>
                             <span className="text-gradient-gold">ELITE</span>
                         </span>
                     </Link>
 
-                    {/* Desktop Menu */}
-                    <div className="hidden md:block">
-                        <div className="ml-10 flex items-center space-x-1">
-                            {navLinks.map((link) => (
-                                <Link
-                                    key={link.name}
-                                    to={link.path}
-                                    className={`relative px-4 py-2 text-sm font-medium transition-all duration-300 rounded-lg ${
-                                        location.pathname === link.path
-                                            ? 'text-primary drop-shadow-[0_0_8px_rgba(201,169,97,0.5)]'
-                                            : 'text-muted hover:text-light hover:bg-white/5'
-                                    }`}
-                                >
-                                    {link.name}
-                                    {location.pathname === link.path && (
-                                        <motion.div
-                                            layoutId="underline"
-                                            className="absolute left-0 right-0 bottom-0 h-0.5 bg-gradient-to-r from-transparent via-primary to-transparent"
-                                        />
-                                    )}
-                                </Link>
-                            ))}
-
-                            {/* Theme Toggle */}
-                            <button
-                                onClick={toggleTheme}
-                                className="p-2 ml-2 rounded-lg hover:bg-white/5 transition-all duration-300 text-muted hover:text-primary group"
+                    {/* Desktop Navigation - Center */}
+                    <div className="hidden lg:flex items-center space-x-1 absolute left-1/2 transform -translate-x-1/2">
+                        {navLinks.map((link) => (
+                            <Link
+                                key={link.name}
+                                to={link.path}
+                                className={`relative px-4 py-2 text-sm font-medium transition-all duration-300 rounded-lg whitespace-nowrap ${
+                                    location.pathname === link.path
+                                        ? 'text-primary drop-shadow-[0_0_8px_rgba(201,169,97,0.5)]'
+                                        : 'text-muted hover:text-light hover:bg-white/5'
+                                }`}
                             >
-                                {theme === 'dark' ? (
-                                    <Sun className="h-5 w-5 group-hover:rotate-90 transition-transform duration-500" />
-                                ) : (
-                                    <Moon className="h-5 w-5 group-hover:-rotate-12 transition-transform duration-500" />
+                                {link.name}
+                                {location.pathname === link.path && (
+                                    <motion.div
+                                        layoutId="underline"
+                                        className="absolute left-0 right-0 bottom-0 h-0.5 bg-gradient-to-r from-transparent via-primary to-transparent"
+                                    />
                                 )}
-                            </button>
-                        </div>
+                            </Link>
+                        ))}
+
+                        {/* Theme Toggle */}
+                        <button
+                            onClick={toggleTheme}
+                            className="p-2 ml-2 rounded-lg hover:bg-white/5 transition-all duration-300 text-muted hover:text-primary group"
+                        >
+                            {theme === 'dark' ? (
+                                <Sun className="h-5 w-5 group-hover:rotate-90 transition-transform duration-500" />
+                            ) : (
+                                <Moon className="h-5 w-5 group-hover:-rotate-12 transition-transform duration-500" />
+                            )}
+                        </button>
                     </div>
 
-                    <div className="hidden md:block">
+                    {/* Desktop User Menu - Right */}
+                    <div className="hidden lg:block flex-shrink-0">
                         {user ? (
                             <div className="flex items-center space-x-3">
                                 {user.is_superuser && (
@@ -139,7 +139,7 @@ const Navbar = () => {
                     </div>
 
                     {/* Mobile menu button */}
-                    <div className="md:hidden">
+                    <div className="lg:hidden flex-shrink-0">
                         <button
                             onClick={() => setIsOpen(!isOpen)}
                             className="p-2 rounded-lg text-muted hover:text-primary hover:bg-white/5 transition-all duration-300"
@@ -157,7 +157,7 @@ const Navbar = () => {
                         initial={{ opacity: 0, height: 0 }}
                         animate={{ opacity: 1, height: 'auto' }}
                         exit={{ opacity: 0, height: 0 }}
-                        className="md:hidden glass-panel border-t border-primary/10 mt-2"
+                        className="lg:hidden glass-panel border-t border-primary/10 mt-2"
                     >
                         <div className="px-4 pt-3 pb-4 space-y-2">
                             {navLinks.map((link, index) => (
