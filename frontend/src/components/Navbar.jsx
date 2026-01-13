@@ -62,13 +62,13 @@ const Navbar = () => {
                         </span>
                     </Link>
 
-                    {/* Desktop Navigation - Flex grow to push menu right */}
-                    <div className="hidden lg:flex items-center space-x-1 flex-grow justify-center mx-8">
+                    {/* Desktop Navigation Links */}
+                    <div className="hidden lg:flex items-center space-x-1 ml-auto mr-4">
                         {navLinks.map((link) => (
                             <Link
                                 key={link.name}
                                 to={link.path}
-                                className={`relative px-4 py-2 text-sm font-medium transition-all duration-300 rounded-lg whitespace-nowrap ${
+                                className={`relative px-3 py-2 text-sm font-medium transition-all duration-300 rounded-lg whitespace-nowrap ${
                                     location.pathname === link.path
                                         ? 'text-primary drop-shadow-[0_0_8px_rgba(201,169,97,0.5)]'
                                         : 'text-muted hover:text-light hover:bg-white/5'
@@ -83,11 +83,14 @@ const Navbar = () => {
                                 )}
                             </Link>
                         ))}
+                    </div>
 
+                    {/* Desktop Actions - Right */}
+                    <div className="hidden lg:flex items-center space-x-2 flex-shrink-0">
                         {/* Theme Toggle */}
                         <button
                             onClick={toggleTheme}
-                            className="p-2 ml-2 rounded-lg hover:bg-white/5 transition-all duration-300 text-muted hover:text-primary group"
+                            className="p-2 rounded-lg hover:bg-white/5 transition-all duration-300 text-muted hover:text-primary group"
                         >
                             {theme === 'dark' ? (
                                 <Sun className="h-5 w-5 group-hover:rotate-90 transition-transform duration-500" />
@@ -95,12 +98,10 @@ const Navbar = () => {
                                 <Moon className="h-5 w-5 group-hover:-rotate-12 transition-transform duration-500" />
                             )}
                         </button>
-                    </div>
 
-                    {/* Desktop User Menu - Right */}
-                    <div className="hidden lg:flex items-center space-x-3 flex-shrink-0">
+                        {/* User Menu */}
                         {user ? (
-                            <div className="flex items-center space-x-3">
+                            <>
                                 {user.is_superuser && (
                                     <Link
                                         to="/admin"
@@ -125,7 +126,7 @@ const Navbar = () => {
                                 >
                                     <LogOut className="h-5 w-5" />
                                 </button>
-                            </div>
+                            </>
                         ) : (
                             <Link
                                 to="/login"
