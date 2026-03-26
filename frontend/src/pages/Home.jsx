@@ -31,7 +31,7 @@ const Home = () => {
     return (
         <div className="min-h-screen bg-dark text-white overflow-x-hidden">
             {/* Hero Section */}
-            <section className="relative h-screen flex items-center justify-center overflow-hidden">
+            <section className="relative min-h-screen flex items-start justify-center overflow-hidden pt-32 pb-12">
                 {/* Premium Background with Gradient */}
                 <div className="absolute inset-0 z-0">
                     {/* Base gradient background - luxury showroom feel */}
@@ -62,7 +62,7 @@ const Home = () => {
                     </div>
                 </div>
 
-                <div className="relative z-20 text-center px-4 max-w-6xl mx-auto mt-16">
+                <div className="relative z-20 text-center px-4 max-w-6xl mx-auto mt-0">
                     <motion.div
                         initial={{ opacity: 0, y: 50 }}
                         animate={{ opacity: 1, y: 0 }}

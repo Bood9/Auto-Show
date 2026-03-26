@@ -49,98 +49,105 @@ const Navbar = () => {
     return (
         <nav className={`fixed w-full z-50 transition-all duration-500 ${scrolled ? 'glass-panel py-3 shadow-lg shadow-primary/10' : 'bg-transparent py-6'}`}>
             <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-                <div className="flex items-center justify-between h-16">
-                    {/* Logo */}
-                    <Link to="/" className="flex items-center space-x-3 group flex-shrink-0">
-                        <div className="relative">
-                            <Car className="h-9 w-9 text-primary group-hover:scale-110 transition-all duration-300 drop-shadow-[0_0_12px_rgba(201,169,97,0.6)]" />
-                            <div className="absolute inset-0 bg-primary/20 blur-xl rounded-full group-hover:bg-primary/30 transition-all duration-300"></div>
-                        </div>
-                        <span className="text-2xl font-bold tracking-wider font-display whitespace-nowrap">
-                            <span className="text-light">DUBAI </span>
-                            <span className="text-gradient-gold">ELITE</span>
-                        </span>
-                    </Link>
-
-                    {/* Desktop Navigation Links */}
-                    <div className="hidden lg:flex items-center space-x-1 ml-auto mr-4">
-                        {navLinks.map((link) => (
-                            <Link
-                                key={link.name}
-                                to={link.path}
-                                className={`relative px-3 py-2 text-sm font-medium transition-all duration-300 rounded-lg whitespace-nowrap ${
-                                    location.pathname === link.path
-                                        ? 'text-primary drop-shadow-[0_0_8px_rgba(201,169,97,0.5)]'
-                                        : 'text-muted hover:text-light hover:bg-white/5'
-                                }`}
-                            >
-                                {link.name}
-                                {location.pathname === link.path && (
-                                    <motion.div
-                                        layoutId="underline"
-                                        className="absolute left-0 right-0 bottom-0 h-0.5 bg-gradient-to-r from-transparent via-primary to-transparent"
-                                    />
-                                )}
-                            </Link>
-                        ))}
+                <div className="flex items-center h-16">
+                    {/* Logo - Pinned to left */}
+                    <div className="flex-shrink-0">
+                        <Link to="/" className="flex items-center space-x-3 group">
+                            <div className="relative">
+                                <Car className="h-9 w-9 text-primary group-hover:scale-110 transition-all duration-300 drop-shadow-[0_0_12px_rgba(201,169,97,0.6)]" />
+                                <div className="absolute inset-0 bg-primary/20 blur-xl rounded-full group-hover:bg-primary/30 transition-all duration-300"></div>
+                            </div>
+                            <span className="text-2xl font-bold tracking-wider font-display whitespace-nowrap">
+                                <span className="text-light">DUBAI </span>
+                                <span className="text-gradient-gold">ELITE</span>
+                            </span>
+                        </Link>
                     </div>
 
-                    {/* Desktop Actions - Right */}
-                    <div className="hidden lg:flex items-center space-x-2 flex-shrink-0">
-                        {/* Theme Toggle */}
-                        <button
-                            onClick={toggleTheme}
-                            className="p-2 rounded-lg hover:bg-white/5 transition-all duration-300 text-muted hover:text-primary group"
-                        >
-                            {theme === 'dark' ? (
-                                <Sun className="h-5 w-5 group-hover:rotate-90 transition-transform duration-500" />
-                            ) : (
-                                <Moon className="h-5 w-5 group-hover:-rotate-12 transition-transform duration-500" />
-                            )}
-                        </button>
+                    {/* Spacer to push everything else to the right */}
+                    <div className="flex-grow"></div>
 
-                        {/* User Menu */}
-                        {user ? (
-                            <>
-                                {user.is_superuser && (
-                                    <Link
-                                        to="/admin"
-                                        className="flex items-center space-x-2 px-3 py-2 rounded-lg bg-accent/10 text-accent hover:bg-accent/20 transition-all duration-300 font-semibold border border-accent/20"
-                                        title="Админ-панель"
-                                    >
-                                        <Shield className="h-4 w-4" />
-                                        <span className="text-sm">Админ</span>
-                                    </Link>
-                                )}
+                    {/* Right side: Navigation + Actions */}
+                    <div className="hidden lg:flex items-center space-x-8">
+                        {/* Desktop Navigation Links */}
+                        <div className="flex items-center space-x-1">
+                            {navLinks.map((link) => (
                                 <Link
-                                    to="/dashboard"
-                                    className="flex items-center space-x-2 glass-panel glass-panel-hover px-4 py-2 rounded-lg transition-all duration-300 border border-primary/20"
+                                    key={link.name}
+                                    to={link.path}
+                                    className={`relative px-3 py-2 text-sm font-medium transition-all duration-300 rounded-lg whitespace-nowrap ${location.pathname === link.path
+                                        ? 'text-primary drop-shadow-[0_0_8px_rgba(201,169,97,0.5)]'
+                                        : 'text-muted hover:text-light hover:bg-white/5'
+                                        }`}
                                 >
-                                    <LayoutDashboard className="h-4 w-4 text-primary" />
-                                    <span className="text-sm font-medium">Кабинет</span>
+                                    {link.name}
+                                    {location.pathname === link.path && (
+                                        <motion.div
+                                            layoutId="underline"
+                                            className="absolute left-0 right-0 bottom-0 h-0.5 bg-gradient-to-r from-transparent via-primary to-transparent"
+                                        />
+                                    )}
                                 </Link>
-                                <button
-                                    onClick={handleLogout}
-                                    className="p-2 rounded-lg text-muted hover:text-accent hover:bg-accent/10 transition-all duration-300"
-                                    title="Выйти"
-                                >
-                                    <LogOut className="h-5 w-5" />
-                                </button>
-                            </>
-                        ) : (
-                            <Link
-                                to="/login"
-                                className="relative flex items-center space-x-2 px-6 py-2.5 rounded-lg bg-gradient-to-r from-primary/20 to-primary/10 border border-primary/30 hover:border-primary/50 text-primary font-semibold transition-all duration-300 hover:shadow-lg hover:shadow-primary/20 group overflow-hidden"
+                            ))}
+                        </div>
+
+                        {/* Desktop Actions */}
+                        <div className="flex items-center space-x-2">
+                            {/* Theme Toggle */}
+                            <button
+                                onClick={toggleTheme}
+                                className="p-2 rounded-lg hover:bg-white/5 transition-all duration-300 text-muted hover:text-primary group"
                             >
-                                <div className="absolute inset-0 bg-gradient-to-r from-primary/0 via-primary/10 to-primary/0 translate-x-[-100%] group-hover:translate-x-[100%] transition-transform duration-1000"></div>
-                                <User className="h-4 w-4 relative z-10" />
-                                <span className="text-sm relative z-10">Войти</span>
-                            </Link>
-                        )}
+                                {theme === 'dark' ? (
+                                    <Sun className="h-5 w-5 group-hover:rotate-90 transition-transform duration-500" />
+                                ) : (
+                                    <Moon className="h-5 w-5 group-hover:-rotate-12 transition-transform duration-500" />
+                                )}
+                            </button>
+
+                            {/* User Menu */}
+                            {user ? (
+                                <>
+                                    {user.is_superuser && (
+                                        <Link
+                                            to="/admin"
+                                            className="flex items-center space-x-2 px-3 py-2 rounded-lg bg-accent/10 text-accent hover:bg-accent/20 transition-all duration-300 font-semibold border border-accent/20"
+                                            title="Админ-панель"
+                                        >
+                                            <Shield className="h-4 w-4" />
+                                            <span className="text-sm">Админ</span>
+                                        </Link>
+                                    )}
+                                    <Link
+                                        to="/dashboard"
+                                        className="flex items-center space-x-2 glass-panel glass-panel-hover px-4 py-2 rounded-lg transition-all duration-300 border border-primary/20"
+                                    >
+                                        <LayoutDashboard className="h-4 w-4 text-primary" />
+                                        <span className="text-sm font-medium">Кабинет</span>
+                                    </Link>
+                                    <button
+                                        onClick={handleLogout}
+                                        className="p-2 rounded-lg text-muted hover:text-accent hover:bg-accent/10 transition-all duration-300"
+                                        title="Выйти"
+                                    >
+                                        <LogOut className="h-5 w-5" />
+                                    </button>
+                                </>
+                            ) : (
+                                <Link
+                                    to="/login"
+                                    className="relative flex items-center space-x-2 px-6 py-2.5 rounded-lg bg-gradient-to-r from-primary/20 to-primary/10 border border-primary/30 hover:border-primary/50 text-primary font-semibold transition-all duration-300 hover:shadow-lg hover:shadow-primary/20 group overflow-hidden"
+                                >
+                                    <div className="absolute inset-0 bg-gradient-to-r from-primary/0 via-primary/10 to-primary/0 translate-x-[-100%] group-hover:translate-x-[100%] transition-transform duration-1000"></div>
+                                    <User className="h-4 w-4 relative z-10" />
+                                    <span className="text-sm relative z-10">Войти</span>
+                                </Link>
+                            )}
+                        </div>
                     </div>
 
                     {/* Mobile menu button */}
-                    <div className="lg:hidden flex-shrink-0">
+                    <div className="lg:hidden ml-auto">
                         <button
                             onClick={() => setIsOpen(!isOpen)}
                             className="p-2 rounded-lg text-muted hover:text-primary hover:bg-white/5 transition-all duration-300"
@@ -171,11 +178,10 @@ const Navbar = () => {
                                     <Link
                                         to={link.path}
                                         onClick={() => setIsOpen(false)}
-                                        className={`block px-4 py-2.5 rounded-lg text-base font-medium transition-all duration-300 ${
-                                            location.pathname === link.path
-                                                ? 'bg-primary/10 text-primary border border-primary/20'
-                                                : 'text-muted hover:text-light hover:bg-white/5'
-                                        }`}
+                                        className={`block px-4 py-2.5 rounded-lg text-base font-medium transition-all duration-300 ${location.pathname === link.path
+                                            ? 'bg-primary/10 text-primary border border-primary/20'
+                                            : 'text-muted hover:text-light hover:bg-white/5'
+                                            }`}
                                     >
                                         {link.name}
                                     </Link>

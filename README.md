@@ -11,10 +11,9 @@ Modern Car Dealership Website built with Django and React.
 
 ### 1. Backend (Django)
 
-Open a terminal and run:
+Open a terminal in the root directory (`AutoShow`) and run:
 
 ```bash
-cd backend
 # Create virtual environment (if not exists)
 python3 -m venv venv
 # Activate virtual environment
@@ -53,3 +52,7 @@ The frontend will be available at `http://localhost:5173`.
 - **Sell Your Car**: Submit commission requests.
 - **News**: Stay updated with latest news and promotions.
 - **User Dashboard**: Track your requests (requires login).
+
+
+Bogdan
+flame7578
