@@ -1,58 +1,31 @@
 # AutoShow
 
-Modern Car Dealership Website built with Django and React.
+Современный веб-сайт автосалона, разработанный с использованием Django и React.
 
-## Prerequisites
+> Инструкции по установке и запуску проекта перенесены в файл [SETUP.md](SETUP.md).
 
-- Python 3.8+
-- Node.js 16+
+## Описание проекта
 
-## Setup & Run
+### Актуальность темы
+В современном мире процесс покупки, продажи и обслуживания автомобилей всё больше переходит в онлайн-среду. Создание удобной и функциональной веб-платформы для автосалона позволяет клиентам экономить время, получать подробную информацию об автомобилях не выходя из дома, а бизнесу — расширять охват аудитории и автоматизировать процессы взаимодействия с клиентами. 
 
-### 1. Backend (Django)
+### Целевая аудитория
+- **Потенциальные покупатели автомобилей**, ищущие удобный способ выбора авто и онлайн-бронирования тест-драйвов.
+- **Владельцы автомобилей**, желающие быстро и безопасно продать своё транспортное средство через автосалон.
+- **Автолюбители**, интересующиеся новостями авторынка, обзорами и актуальными акциями автосалона.
 
-Open a terminal in the root directory (`AutoShow`) and run:
+### Предполагаемые функциональные возможности
+- **Каталог автомобилей**: Просмотр доступных машин с возможностью фильтрации по различным параметрам (марка, модель, цена, год выпуска).
+- **Детальная страница автомобиля**: Просмотр технических характеристик, фотографий и функционал бронирования тест-драйва.
+- **Продажа автомобиля**: Заполнение формы заявки на выкуп или комиссионную продажу авто (Sell Your Car).
+- **Новости**: Раздел для публикации последних новостей и спецпредложений автосалона.
+- **Личный кабинет**: Отслеживание статуса своих заявок пользователями (требуется авторизация).
 
-```bash
-# Create virtual environment (if not exists)
-python3 -m venv venv
-# Activate virtual environment
-source venv/bin/activate
-# Install dependencies
-pip install -r requirements.txt
-# Run migrations
-python manage.py migrate
-# Create superuser (for admin panel)
-python manage.py createsuperuser
-# Run server
-python manage.py runserver
-```
+### Используемые технологии
+- **Backend**: Python, Django, Django REST Framework
+- **Frontend**: JavaScript, React, Vite, Node.js
+- **Стилизация**: Tailwind CSS / Vanilla CSS
+- **База данных**: SQLite (по умолчанию) или PostgreSQL
 
-The backend API will be available at `http://localhost:8000`.
-Admin panel: `http://localhost:8000/admin`.
-
-### 2. Frontend (React)
-
-Open a **new** terminal and run:
-
-```bash
-cd frontend
-# Install dependencies
-npm install
-# Run development server
-npm run dev
-```
-
-The frontend will be available at `http://localhost:5173`.
-
-## Features
-
-- **Catalog**: Browse cars with filters.
-- **Car Details**: View specs and book test drives.
-- **Sell Your Car**: Submit commission requests.
-- **News**: Stay updated with latest news and promotions.
-- **User Dashboard**: Track your requests (requires login).
-
-
-Bogdan
-flame7578
+### Ожидаемый результат
+Готовое веб-приложение, объединяющее в себе клиентскую часть (frontend) для удобного взаимодействия пользователей с сайтом и серверную часть (backend) для надёжной обработки данных и управления контентом. Результатом станет современная платформа, автоматизирующая основные бизнес-процессы автосалона в интернете с удобной панелью администратора и приятным пользовательским интерфейсом.
