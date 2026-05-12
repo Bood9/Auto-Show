@@ -7,7 +7,7 @@ const CarCard = ({ car }) => {
     const getImageUrl = (imagePath) => {
         if (!imagePath) return 'https://via.placeholder.com/400x300?text=No+Image';
         if (imagePath.startsWith('http')) return imagePath;
-        return `http://localhost:8000${imagePath}`;
+        return `http://127.0.0.1:8000${imagePath}`;
     };
 
     const mainImage = getImageUrl(car.images.find(img => img.is_main)?.image || car.images[0]?.image);

@@ -16,7 +16,7 @@ const CarDetails = () => {
     const getImageUrl = (imagePath) => {
         if (!imagePath) return 'https://via.placeholder.com/800x600';
         if (imagePath.startsWith('http')) return imagePath;
-        return `http://localhost:8000${imagePath}`;
+        return `http://127.0.0.1:8000${imagePath}`;
     };
 
     useEffect(() => {

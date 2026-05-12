@@ -15,7 +15,7 @@ const News = () => {
     const getImageUrl = (imagePath) => {
         if (!imagePath) return null;
         if (imagePath.startsWith('http')) return imagePath;
-        return `http://localhost:8000${imagePath}`;
+        return `http://127.0.0.1:8000${imagePath}`;
     };
 
     const containerVariants = {
